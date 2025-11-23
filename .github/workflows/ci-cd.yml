@@ -4,6 +4,8 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+env:
+  REPO_LC: ${{ toLower(github.repository) }}
 jobs:
   build-and-push:
     runs-on: self-hosted
@@ -24,8 +26,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
+            ghcr.io/${{ env.REPO_LC }}:latest
+            ghcr.io/${{ env.REPO_LC }}:${{ github.sha }}
       - name: Update GitOps repository
         shell: bash
         env:
@@ -43,9 +45,9 @@ jobs:
           cd gitops
           
           if [[ "$OSTYPE" == "darwin"* ]]; then
-            sed -i '' "s|image: ghcr.io/${{ github.repository }}:.*|image: ghcr.io/${{ github.repository }}:${{ github.sha }}|g" deployment.yaml
+            sed -i '' "s|image: ghcr.io/${{ env.REPO_LC }}:.*|image: ghcr.io/${{ env.REPO_LC }}:${{ github.sha }}|g" deployment.yaml
           else
-            sed -i "s|image: ghcr.io/${{ github.repository }}:.*|image: ghcr.io/${{ github.repository }}:${{ github.sha }}|g" deployment.yaml
+            sed -i "s|image: ghcr.io/${{ env.REPO_LC }}:.*|image: ghcr.io/${{ env.REPO_LC }}:${{ github.sha }}|g" deployment.yaml
           fi
           
           # Commit changes
