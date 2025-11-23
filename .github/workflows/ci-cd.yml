@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [ main ]
 env:
-  REPO_LC: ${{ toLower(github.repository) }}
+  REPO_LC: ${{ github.repository | lower }}
 jobs:
   build-and-push:
     runs-on: self-hosted
